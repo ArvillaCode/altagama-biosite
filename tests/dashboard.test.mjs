@@ -41,21 +41,25 @@ test('validates exact calendar dates and limits the report to 90 days', () => {
   assert.deepEqual(range('start=2026-10-08&end=2026-10-14'), { start: '2026-10-08', end: '2026-10-14' });
   for (const query of ['start=2026-02-30&end=2026-03-03', 'start=2026-10-15&end=2026-10-16', 'start=2026-01-01&end=2026-10-14', 'start=2026-10-14&end=2026-10-08', 'end=bad']) assert.equal(range(query), null);
 });
-test('aggregates daily counters once and excludes test data in the SQL', async () => {
+test('compares equal periods, keeps current breakdown and excludes test data in one read', async () => {
   const records = [
+    { day: '2026-10-01', event: 'page_view', source: 'instagram', device: 'mobile', total: 5 },
     { day: '2026-10-14', event: 'page_view', source: 'instagram', device: 'mobile', total: 10 },
     { day: '2026-10-14', event: 'page_view', source: 'direct', device: 'desktop', total: 3 },
     { day: '2026-10-14', event: 'click_whatsapp', source: 'instagram', device: 'mobile', total: 4 }
   ];
   let reads = 0;
   const db = { prepare(sql) { assert.match(sql, /is_test = 0/); return { bind(start, end) {
-    assert.equal(start, '2026-10-08'); assert.equal(end, '2026-10-14');
+    assert.equal(start, '2026-10-01'); assert.equal(end, '2026-10-14');
     return { async all() { reads++; return { success: true, results: records }; } };
   } }; } };
   const result = await buildReport(db, { start: '2026-10-08', end: '2026-10-14' });
   assert.equal(reads, 1);
   assert.equal(result.events.page_view, 13);
   assert.equal(result.events.click_whatsapp, 4);
+  assert.equal(result.previous.events.page_view, 5);
+  assert.deepEqual(result.previous.range, { start: '2026-10-01', end: '2026-10-07' });
+  assert.equal(result.breakdown.length, 3);
   assert.equal(result.daily.find(row => row.event === 'page_view').total, 13);
   assert.equal(result.devices.find(row => row.device === 'mobile' && row.event === 'page_view').total, 10);
 });

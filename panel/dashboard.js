@@ -11,7 +11,7 @@
     ['click_catalog', 'Catálogo / Website'], ['open_bonus', 'Abrir bono'],
     ['click_instagram', 'Instagram'], ['click_tiktok', 'TikTok']
   ];
-  let range, busy = false, expired = false, controller, requestId = 0;
+  let range, busy = false, expired = false, controller, requestId = 0, lastData;
 
   function today() {
     const parts = new Intl.DateTimeFormat('en', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
@@ -33,9 +33,11 @@
   }
   function expire() {
     expired = true;
+    lastData = null; $('export-csv').disabled = true;
     $('auth-message').hidden = false;
     for (const id of ['stat-views', 'stat-whatsapp', 'stat-catalog', 'stat-bonus', 'mobile-count', 'desktop-count', 'mobile-percent', 'desktop-percent']) $(id).textContent = '—';
-    for (const id of ['chart-container', 'button-list', 'source-list']) $(id).replaceChildren();
+    for (const id of ['chart-container', 'button-list', 'source-list', 'daily-table', 'origin-table']) $(id).replaceChildren();
+    for (const id of ['ratio-whatsapp', 'ratio-catalog', 'change-views', 'change-whatsapp', 'change-catalog', 'change-bonus']) $(id).textContent = '—';
     $('updated-at').textContent = 'Sesión terminada';
     setLive(false, 'Sesión cerrada');
     message('');
@@ -59,6 +61,14 @@
       days.push({ day, visits: count(values.page_view), whatsapp: count(values.click_whatsapp) + count(values.click_bonus_whatsapp) });
     }
     const container = $('chart-container');
+    const dailyBody = $('daily-table'); dailyBody.replaceChildren();
+    for (const day of days) {
+      const row = document.createElement('tr');
+      for (const value of [dayLabel(day.day), fmt(day.visits), fmt(day.whatsapp)]) {
+        const cell = document.createElement('td'); cell.textContent = value; row.append(cell);
+      }
+      dailyBody.append(row);
+    }
     container.replaceChildren();
     if (!days.some(day => day.visits || day.whatsapp)) {
       const empty = document.createElement('div'); empty.className = 'empty-state';
@@ -66,7 +76,7 @@
       const description = document.createElement('p'); description.textContent = 'Aún no hay visitas ni clics en WhatsApp registrados para este período. Las pruebas están excluidas.';
       empty.append(title, description); container.append(empty);
     } else {
-      const svg = svgNode('svg', { viewBox: '0 0 720 220', class: 'activity-svg', role: 'img', 'aria-label': 'Evolución diaria de visitas y clics en WhatsApp' });
+      const svg = svgNode('svg', { viewBox: '0 0 720 220', class: 'activity-svg', role: 'img', 'aria-label': 'Evolución diaria de cargas de página y clics en WhatsApp; valores exactos en la tabla siguiente' });
       const max = Math.max(1, ...days.flatMap(day => [day.visits, day.whatsapp]));
       const top = Math.ceil(max / 4) * 4;
       const y = value => 184 - value / top * 164;
@@ -84,7 +94,7 @@
         svg.append(svgNode('path', { d: path, class: className }));
         if (days.length <= 31) days.forEach((day, index) => {
           const dot = svgNode('circle', { cx: x(index), cy: y(day[key]), r: 2.5, fill: color });
-          dot.append(svgNode('title', {}, `${dayLabel(day.day)}: ${fmt(day[key])} ${key === 'visits' ? 'visitas' : 'clics en WhatsApp'}`));
+          dot.append(svgNode('title', {}, `${dayLabel(day.day)}: ${fmt(day[key])} ${key === 'visits' ? 'cargas de página' : 'clics en WhatsApp'}`));
           svg.append(dot);
         });
       }
@@ -111,15 +121,37 @@
   }
   function render(data) {
     const events = data.events;
+    const previous = data.previous?.events || {};
+    const whatsapp = count(events.click_whatsapp) + count(events.click_bonus_whatsapp);
+    const previousWhatsapp = count(previous.click_whatsapp) + count(previous.click_bonus_whatsapp);
+    const comparison = (current, prior) => prior ? `${current - prior >= 0 ? '+' : '−'}${fmt(Math.abs(current - prior))} (${current - prior >= 0 ? '+' : '−'}${Math.round(Math.abs(current - prior) / prior * 100)} %) frente al período anterior` : 'Sin base de comparación anterior';
     $('stat-views').textContent = fmt(events.page_view);
-    $('stat-whatsapp').textContent = fmt(count(events.click_whatsapp) + count(events.click_bonus_whatsapp));
+    $('stat-whatsapp').textContent = fmt(whatsapp);
     $('stat-catalog').textContent = fmt(events.click_catalog);
     $('stat-bonus').textContent = fmt(events.open_bonus);
+    for (const [id, current, prior] of [['views', count(events.page_view), count(previous.page_view)], ['whatsapp', whatsapp, previousWhatsapp], ['catalog', count(events.click_catalog), count(previous.click_catalog)], ['bonus', count(events.open_bonus), count(previous.open_bonus)]]) $('change-' + id).textContent = comparison(current, prior);
+    const views = count(events.page_view);
+    $('ratio-whatsapp').textContent = views ? new Intl.NumberFormat('es-CO', { maximumFractionDigits: 1 }).format(whatsapp / views * 100) : '—';
+    $('ratio-catalog').textContent = views ? new Intl.NumberFormat('es-CO', { maximumFractionDigits: 1 }).format(count(events.click_catalog) / views * 100) : '—';
     drawChart(data);
     drawList('button-list', buttonNames.map(([event, label]) => ({ label, value: count(events[event]) })).sort((a, b) => b.value - a.value));
     const sources = (data.sources || []).filter(row => row.event === 'page_view')
       .map(row => ({ label: sourceNames[row.source] || 'Otro origen', value: count(row.total) })).sort((a, b) => b.value - a.value);
     drawList('source-list', sources);
+    const origins = new Map();
+    for (const row of data.sources || []) {
+      if (!origins.has(row.source)) origins.set(row.source, {});
+      origins.get(row.source)[row.event] = count(row.total);
+    }
+    const originBody = $('origin-table'); originBody.replaceChildren();
+    for (const [source, totals] of [...origins].sort((a, b) => count(b[1].page_view) - count(a[1].page_view))) {
+      const row = document.createElement('tr');
+      for (const value of [sourceNames[source] || 'Otro origen', fmt(totals.page_view), fmt(count(totals.click_whatsapp) + count(totals.click_bonus_whatsapp)), fmt(totals.click_catalog)]) {
+        const cell = document.createElement('td'); cell.textContent = value; row.append(cell);
+      }
+      originBody.append(row);
+    }
+    if (!origins.size) { const row = document.createElement('tr'), cell = document.createElement('td'); cell.colSpan = 4; cell.textContent = 'Sin datos en este período.'; row.append(cell); originBody.append(row); }
     const devices = new Map((data.devices || []).filter(row => row.event === 'page_view').map(row => [row.device, count(row.total)]));
     const total = (devices.get('mobile') || 0) + (devices.get('desktop') || 0);
     for (const device of ['mobile', 'desktop']) {
@@ -137,6 +169,7 @@
     controller = new AbortController();
     const localController = controller;
     const timeout = setTimeout(() => localController.abort(), 8000);
+    if (lastData && (lastData.range.start !== range.start || lastData.range.end !== range.end)) { lastData = null; $('export-csv').disabled = true; }
     busy = true; $('refresh').disabled = true; $('stats').setAttribute('aria-busy', 'true');
     try {
       const url = new URL('/panel/api/report', location.origin);
@@ -149,7 +182,7 @@
       const data = await response.json();
       if (revision !== requestId) return;
       if (!data.events || !data.range || !Array.isArray(data.daily)) throw new Error('network');
-      render(data); message(''); setLive(true, 'Actualización activa');
+      render(data); lastData = data; $('export-csv').disabled = false; message(''); setLive(true, 'Actualización activa');
     } catch (error) {
       if (revision !== requestId) return;
       message(error.message === 'range' ? 'Revisa las fechas: puedes consultar hasta 90 días y no seleccionar días futuros.' : 'No pudimos actualizar los datos. Conservamos la última lectura y volveremos a intentarlo.');
@@ -166,6 +199,15 @@
     const end = today(); range = { start: shift(end, 1 - Number(selected)), end }; void load(true);
   }
   $('period').addEventListener('change', usePreset);
+  $('export-csv').addEventListener('click', () => {
+    if (!lastData || expired) return;
+    const escape = value => `"${String(value).replaceAll('"', '""')}"`;
+    const lines = [['fecha', 'evento', 'origen', 'dispositivo', 'total'], ...(lastData.breakdown || []).map(row => [row.day, row.event, row.source, row.device, row.total])];
+    const csv = '\uFEFF' + lines.map(row => row.map(escape).join(',')).join('\r\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const link = document.createElement('a'); link.href = url; link.download = `altagama-metricas-${lastData.range.start}-${lastData.range.end}.csv`; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
   $('refresh').addEventListener('click', () => { if ($('period').value !== 'custom') { usePreset(); } else { void load(true); } });
   $('apply-dates').addEventListener('click', () => {
     const start = $('start-date').value, end = $('end-date').value;

@@ -18,29 +18,32 @@
     <div class="sidebar-bottom"><a href="/?medicion=off" target="_blank" rel="noopener">Ver micrositio ↗</a><a href="/cdn-cgi/access/logout">Cerrar sesión →</a><p>Cartagena, Colombia<br>Acceso privado</p></div>
   </aside>
   <main class="dashboard-main">
-    <header class="dashboard-heading"><div><p class="eyebrow">ALTAGAMA STORE</p><h1>Así se mueve tu marca.</h1><p class="subtitle">Visitas e interés real en tu micrositio.</p></div><span id="live-badge" class="live-badge"><i></i><span>Conectando</span></span></header>
+    <header class="dashboard-heading"><div><p class="eyebrow">ALTAGAMA STORE</p><h1>Así se mueve tu marca.</h1><p class="subtitle">Cargas de página y acciones registradas en tu micrositio.</p></div><span id="live-badge" class="live-badge"><i></i><span>Conectando</span></span></header>
     <section class="toolbar" aria-label="Período del reporte">
       <div class="period-control"><label for="period">Período</label><select id="period"><option value="7" selected>Últimos 7 días</option><option value="1">Hoy</option><option value="30">Últimos 30 días</option><option value="custom">Elegir fechas</option></select></div>
       <div id="custom-range" class="custom-range" hidden><label>Desde<input id="start-date" type="date"></label><label>Hasta<input id="end-date" type="date"></label><button id="apply-dates" class="button button-small" type="button">Aplicar</button></div>
-      <div class="toolbar-right"><span id="updated-at" class="muted">Esperando datos…</span><button id="refresh" class="button button-small" type="button" aria-label="Actualizar estadísticas">↻ Actualizar</button></div>
+      <div class="toolbar-right"><span id="updated-at" class="muted">Esperando datos…</span><button id="export-csv" class="button button-small" type="button" disabled>Descargar CSV</button><button id="refresh" class="button button-small" type="button" aria-label="Actualizar estadísticas">↻ Actualizar</button></div>
     </section>
     <div id="status-message" class="status-message" role="status" aria-live="polite" hidden></div>
     <div id="auth-message" class="auth-message" hidden><h2>Vuelve a entrar para continuar.</h2><p>Tu sesión terminó o no tienes acceso a este panel.</p><a class="button button-gold" href="/login/">Ir al acceso privado →</a></div>
     <section id="stats" class="stats-grid" aria-label="Indicadores del período" aria-busy="true">
-      <article class="stat-card featured"><p>Visitas al micrositio <span aria-hidden="true">↗</span></p><strong id="stat-views">—</strong><small>Cargas de página</small></article>
-      <article class="stat-card"><p>WhatsApp <span class="green" aria-hidden="true">↗</span></p><strong id="stat-whatsapp">—</strong><small>Botón principal + bono</small></article>
-      <article class="stat-card"><p>Catálogo <span aria-hidden="true">↗</span></p><strong id="stat-catalog">—</strong><small>Clics en Website</small></article>
-      <article class="stat-card"><p>Interés en el bono <span aria-hidden="true">✦</span></p><strong id="stat-bonus">—</strong><small>Aperturas del beneficio</small></article>
+      <article class="stat-card featured"><p>Cargas de página <span aria-hidden="true">↗</span></p><strong id="stat-views">—</strong><small id="change-views">Frente al período anterior: —</small></article>
+      <article class="stat-card"><p>Clics en WhatsApp <span class="green" aria-hidden="true">↗</span></p><strong id="stat-whatsapp">—</strong><small id="change-whatsapp">Frente al período anterior: —</small></article>
+      <article class="stat-card"><p>Clics al catálogo <span aria-hidden="true">↗</span></p><strong id="stat-catalog">—</strong><small id="change-catalog">Frente al período anterior: —</small></article>
+      <article class="stat-card"><p>Aperturas del bono <span aria-hidden="true">✦</span></p><strong id="stat-bonus">—</strong><small id="change-bonus">Frente al período anterior: —</small></article>
     </section>
+    <section class="panel ratios-panel" aria-labelledby="ratios-title"><div><p class="eyebrow">INTERÉS</p><h2 id="ratios-title">Clics por 100 cargas</h2><p class="panel-note">Relación entre eventos, no entre personas. Puede superar 100 si hay clics repetidos.</p></div><div><strong id="ratio-whatsapp">—</strong><span>WhatsApp</span></div><div><strong id="ratio-catalog">—</strong><span>Catálogo</span></div></section>
     <section class="panel chart-panel" aria-labelledby="activity-title">
-      <div class="panel-heading"><div><p class="eyebrow">EVOLUCIÓN</p><h2 id="activity-title">La actividad, día a día</h2></div><div class="chart-legend"><span><i class="legend-gold"></i>Visitas</span><span><i class="legend-green"></i>WhatsApp</span></div></div>
+      <div class="panel-heading"><div><p class="eyebrow">EVOLUCIÓN</p><h2 id="activity-title">La actividad, día a día</h2></div><div class="chart-legend"><span><i class="legend-gold"></i>Cargas</span><span><i class="legend-green"></i>WhatsApp</span></div></div>
       <div id="chart-container" class="chart-container"><p class="loading-copy">Cargando actividad…</p></div>
       <p id="chart-summary" class="chart-summary">Días y horarios de Colombia.</p>
+      <div class="daily-table-wrap"><table class="data-table"><caption>Valores diarios exactos</caption><thead><tr><th>Fecha</th><th>Cargas</th><th>WhatsApp</th></tr></thead><tbody id="daily-table"></tbody></table></div>
     </section>
     <div class="details-grid">
       <section class="panel" aria-labelledby="buttons-title"><div class="panel-heading"><div><p class="eyebrow">ACCIONES</p><h2 id="buttons-title">Qué botones eligen</h2></div></div><div id="button-list" class="metric-list"><p class="loading-copy">Cargando clics…</p></div></section>
       <section class="panel" aria-labelledby="sources-title"><div class="panel-heading"><div><p class="eyebrow">ORIGEN</p><h2 id="sources-title">De dónde llegan</h2></div></div><div id="source-list" class="metric-list"><p class="loading-copy">Cargando orígenes…</p></div><p class="panel-note">Basado en enlaces etiquetados y procedencia disponible.</p></section>
     </div>
+    <section class="panel origin-panel" aria-labelledby="origin-title"><div class="panel-heading"><div><p class="eyebrow">ORIGEN Y ACCIONES</p><h2 id="origin-title">Qué hacen según el origen</h2></div></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th>Origen</th><th>Cargas</th><th>WhatsApp</th><th>Catálogo</th></tr></thead><tbody id="origin-table"></tbody></table></div><p class="panel-note">Origen atribuido por UTM o procedencia disponible; no representa personas únicas.</p></section>
     <section class="panel devices-panel" aria-labelledby="devices-title"><div><p class="eyebrow">DISPOSITIVOS</p><h2 id="devices-title">Cómo te visitan</h2></div><div class="device-card"><span class="device-symbol" aria-hidden="true">▯</span><div><strong id="mobile-count">—</strong><span>Móvil</span></div><b id="mobile-percent">—</b></div><div class="device-card"><span class="device-symbol" aria-hidden="true">▱</span><div><strong id="desktop-count">—</strong><span>Escritorio</span></div><b id="desktop-percent">—</b></div></section>
     <footer class="dashboard-footer"><p>Actualización automática cada 10 segundos mientras el panel está visible. Pruebas excluidas.</p><p>Los clics reflejan interés. No confirman mensajes enviados ni ventas. Las visitas no son personas únicas.</p></footer>
   </main>

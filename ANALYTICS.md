@@ -82,6 +82,9 @@ No presentar clics como conversaciones o ventas, ni cargas como visitantes únic
 - La autorización valida firma RS256, emisor, audiencia, vencimiento y correo permitido. También rechaza hostnames alternativos `pages.dev`.
 - El panel actualiza cada diez segundos solo mientras esté visible. No indica usuarios conectados: son conteos diarios actualizados.
 - Filtros: hoy, 7 días, 30 días o un rango de hasta 90 días. Hora de Colombia.
+- Cada indicador se compara con el período inmediatamente anterior de igual duración. Cuando el valor anterior es cero, se muestra «Sin base de comparación anterior».
+- El panel muestra cargas y acciones por origen, una tabla de valores diarios exactos y clics por 100 cargas. Estos cocientes no son conversiones de personas y pueden superar 100.
+- «Descargar CSV» exporta únicamente los conteos del período visible, desglosados por fecha, evento, origen y dispositivo. La descarga se genera en el navegador a partir del reporte privado; no incluye pruebas.
 - Las pruebas siempre quedan excluidas (`is_test = 0`).
 - Los errores de conexión conservan la última lectura y muestran aviso; al vencer el acceso se limpian los datos visibles.
 - El login del código se completa en Cloudflare Access. El sitio no recibe ni almacena contraseñas ni códigos.
