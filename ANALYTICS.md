@@ -75,8 +75,7 @@ No presentar clics como conversaciones o ventas, ni cargas como visitantes únic
 ## Dashboard y acceso
 
 - Login: `https://altagama.upfunnel.click/login/`.
-- Entrada personalizada del panel: `https://altagama.upfunnel.click/panel/`.
-- Dashboard autenticado: `https://altagama.upfunnel.click/panel/dashboard/`.
+- Dashboard: `https://altagama.upfunnel.click/panel/`.
 - La política Access permite únicamente el correo configurado por el propietario; no publicar la lista de correos en el repositorio.
 - App Access: `eb70a79e-af2e-4124-8257-78ca5a8d7258`, organización `upfunnel.cloudflareaccess.com`.
 - Variables de producción: `METRICS_ACCESS_AUD`, `METRICS_ALLOWED_EMAILS` (secreto).
@@ -90,7 +89,6 @@ No presentar clics como conversaciones o ventas, ni cargas como visitantes únic
 - Los errores de conexión conservan la última lectura y muestran aviso; al vencer el acceso se limpian los datos visibles.
 - El login del código se completa en Cloudflare Access. El sitio no recibe ni almacena contraseñas ni códigos.
 - La salida mediante `/cdn-cgi/access/logout` cierra la sesión de Access.
-- Cloudflare Access protege `/panel/dashboard` y `/panel/api/*`; la entrada de `/panel/` es pública y no muestra datos.
 
 ## Compilación
 

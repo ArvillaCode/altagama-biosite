@@ -4,7 +4,6 @@ import { generateKeyPair, exportJWK, createLocalJWKSet, SignJWT } from 'jose';
 import { verifyToken, authenticate } from '../lib/access.js';
 import { parseRange, buildReport } from '../lib/report.js';
 import { onRequest as reportHandler } from '../functions/panel/api/report.js';
-import { readFile } from 'node:fs/promises';
 
 const { privateKey, publicKey } = await generateKeyPair('RS256');
 const jwk = await exportJWK(publicKey);
@@ -67,11 +66,4 @@ test('compares equal periods, keeps current breakdown and excludes test data in 
 test('the report endpoint denies requests that did not pass middleware', async () => {
   const response = await reportHandler({ data: {}, request: new Request('https://altagama.upfunnel.click/panel/api/report'), env: {} });
   assert.equal(response.status, 401);
-});
-test('public entry stays outside Functions while dashboard and report use protected routes', async () => {
-  const routes = JSON.parse(await readFile(new URL('../_routes.json', import.meta.url), 'utf8'));
-  assert.equal(routes.include.includes('/panel'), false);
-  for (const path of ['/panel/dashboard', '/panel/dashboard/*', '/panel/api/*']) assert.ok(routes.include.includes(path));
-  const entry = await readFile(new URL('../panel/index.html', import.meta.url), 'utf8');
-  assert.match(entry, /href="\/panel\/dashboard\/"/);
 });

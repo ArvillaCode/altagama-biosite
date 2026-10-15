@@ -7,8 +7,7 @@ Micrositio urbano premium para ALTAGAMA Store, Cartagena, Colombia.
 - Rama de despliegue: main
 - Compilación: `npm ci && npm run build`, salida `dist/`; Functions en `functions/`.
 - Login privado: https://altagama.upfunnel.click/login/
-- Entrada personalizada: https://altagama.upfunnel.click/panel/
-- Dashboard protegido: https://altagama.upfunnel.click/panel/dashboard/
+- Dashboard protegido: https://altagama.upfunnel.click/panel/
 - Medición propia: `assets/analytics.js` + Pages Function `/api/events` + D1 `altagama-metrics`. Instrucciones y consultas en [ANALYTICS.md](ANALYTICS.md).
 
 ## Estado
