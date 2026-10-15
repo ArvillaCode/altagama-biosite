@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Analítica — Altagama Store</title>
+  <link rel="icon" href="/assets/isotipo-ag.png">
+  <link rel="stylesheet" href="/assets/admin.css">
+  <script src="/panel/dashboard.js" defer></script>
+</head>
+<body class="dashboard-page">
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="/panel/" aria-label="Inicio del panel"><img src="/assets/isotipo-ag.png" alt="" width="48" height="48"><span>ALTAGAMA<small>STORE · ANALÍTICA</small></span></a>
+    <p class="sidebar-label">TU NEGOCIO</p>
+    <a class="sidebar-active" href="/panel/"><span aria-hidden="true">▥</span> Vista general <span class="nav-dot"></span></a>
+    <div class="sidebar-bottom"><a href="/?medicion=off" target="_blank" rel="noopener">Ver micrositio ↗</a><a href="/cdn-cgi/access/logout">Cerrar sesión →</a><p>Cartagena, Colombia<br>Acceso privado</p></div>
+  </aside>
+  <main class="dashboard-main">
+    <header class="dashboard-heading"><div><p class="eyebrow">ALTAGAMA STORE</p><h1>Así se mueve tu marca.</h1><p class="subtitle">Visitas e interés real en tu micrositio.</p></div><span id="live-badge" class="live-badge"><i></i><span>Conectando</span></span></header>
+    <section class="toolbar" aria-label="Período del reporte">
+      <div class="period-control"><label for="period">Período</label><select id="period"><option value="7" selected>Últimos 7 días</option><option value="1">Hoy</option><option value="30">Últimos 30 días</option><option value="custom">Elegir fechas</option></select></div>
+      <div id="custom-range" class="custom-range" hidden><label>Desde<input id="start-date" type="date"></label><label>Hasta<input id="end-date" type="date"></label><button id="apply-dates" class="button button-small" type="button">Aplicar</button></div>
+      <div class="toolbar-right"><span id="updated-at" class="muted">Esperando datos…</span><button id="refresh" class="button button-small" type="button" aria-label="Actualizar estadísticas">↻ Actualizar</button></div>
+    </section>
+    <div id="status-message" class="status-message" role="status" aria-live="polite" hidden></div>
+    <div id="auth-message" class="auth-message" hidden><h2>Vuelve a entrar para continuar.</h2><p>Tu sesión terminó o no tienes acceso a este panel.</p><a class="button button-gold" href="/login/">Ir al acceso privado →</a></div>
+    <section id="stats" class="stats-grid" aria-label="Indicadores del período" aria-busy="true">
+      <article class="stat-card featured"><p>Visitas al micrositio <span aria-hidden="true">↗</span></p><strong id="stat-views">—</strong><small>Cargas de página</small></article>
+      <article class="stat-card"><p>WhatsApp <span class="green" aria-hidden="true">↗</span></p><strong id="stat-whatsapp">—</strong><small>Botón principal + bono</small></article>
+      <article class="stat-card"><p>Catálogo <span aria-hidden="true">↗</span></p><strong id="stat-catalog">—</strong><small>Clics en Website</small></article>
+      <article class="stat-card"><p>Interés en el bono <span aria-hidden="true">✦</span></p><strong id="stat-bonus">—</strong><small>Aperturas del beneficio</small></article>
+    </section>
+    <section class="panel chart-panel" aria-labelledby="activity-title">
+      <div class="panel-heading"><div><p class="eyebrow">EVOLUCIÓN</p><h2 id="activity-title">La actividad, día a día</h2></div><div class="chart-legend"><span><i class="legend-gold"></i>Visitas</span><span><i class="legend-green"></i>WhatsApp</span></div></div>
+      <div id="chart-container" class="chart-container"><p class="loading-copy">Cargando actividad…</p></div>
+      <p id="chart-summary" class="chart-summary">Días y horarios de Colombia.</p>
+    </section>
+    <div class="details-grid">
+      <section class="panel" aria-labelledby="buttons-title"><div class="panel-heading"><div><p class="eyebrow">ACCIONES</p><h2 id="buttons-title">Qué botones eligen</h2></div></div><div id="button-list" class="metric-list"><p class="loading-copy">Cargando clics…</p></div></section>
+      <section class="panel" aria-labelledby="sources-title"><div class="panel-heading"><div><p class="eyebrow">ORIGEN</p><h2 id="sources-title">De dónde llegan</h2></div></div><div id="source-list" class="metric-list"><p class="loading-copy">Cargando orígenes…</p></div><p class="panel-note">Basado en enlaces etiquetados y procedencia disponible.</p></section>
+    </div>
+    <section class="panel devices-panel" aria-labelledby="devices-title"><div><p class="eyebrow">DISPOSITIVOS</p><h2 id="devices-title">Cómo te visitan</h2></div><div class="device-card"><span class="device-symbol" aria-hidden="true">▯</span><div><strong id="mobile-count">—</strong><span>Móvil</span></div><b id="mobile-percent">—</b></div><div class="device-card"><span class="device-symbol" aria-hidden="true">▱</span><div><strong id="desktop-count">—</strong><span>Escritorio</span></div><b id="desktop-percent">—</b></div></section>
+    <footer class="dashboard-footer"><p>Actualización automática cada 10 segundos mientras el panel está visible. Pruebas excluidas.</p><p>Los clics reflejan interés. No confirman mensajes enviados ni ventas. Las visitas no son personas únicas.</p></footer>
+  </main>
+</body>
+</html>

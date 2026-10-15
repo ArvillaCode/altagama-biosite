@@ -5,7 +5,9 @@ Micrositio urbano premium para ALTAGAMA Store, Cartagena, Colombia.
 - Sitio: https://altagama.upfunnel.click
 - Cloudflare Pages: https://altagama-biosite.pages.dev
 - Rama de despliegue: main
-- Artefacto web: index.html (estático)
+- Compilación: `npm ci && npm run build`, salida `dist/`; Functions en `functions/`.
+- Login privado: https://altagama.upfunnel.click/login/
+- Dashboard protegido: https://altagama.upfunnel.click/panel/
 - Medición propia: `assets/analytics.js` + Pages Function `/api/events` + D1 `altagama-metrics`. Instrucciones y consultas en [ANALYTICS.md](ANALYTICS.md).
 
 ## Estado
