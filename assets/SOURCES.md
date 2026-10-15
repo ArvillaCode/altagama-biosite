@@ -2,7 +2,11 @@
 
 Los logotipos y retratos ilustrativos se conservan del proyecto existente.
 
-## Video
+## Video activo
+
+`altagama-background-video.mp4`: video vertical proporcionado por el usuario, optimizado a 576 px de ancho, H.264 a 24 fps, sin audio y con metadatos al inicio para reproducción web. Se conserva la duración completa de aproximadamente 38 segundos. `altagama-background-poster.jpg` es un fotograma del mismo archivo.
+
+## Video anterior
 
 `gold-atmosphere-loop.mp4`: video original generado mediante código, ocho segundos a 24 fps, sin audio, H.264. Luz dorada, neblina abstracta, retícula y partículas con movimiento periódico para una unión continua. `gold-atmosphere-poster.jpg` es el primer fotograma como respaldo.
 
