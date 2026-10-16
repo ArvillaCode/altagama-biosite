@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#090909">
+  <title>Editar sitio — Altagama Store</title>
+  <link rel="icon" href="/assets/isotipo-ag.png">
+  <link rel="stylesheet" href="/assets/admin.css"><link rel="stylesheet" href="/assets/editor.css">
+  <script src="/panel/editor.js" defer></script>
+</head>
+<body class="dashboard-page">
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="/panel/dashboard/"><img src="/assets/isotipo-ag.png" alt="" width="48" height="48"><span>ALTAGAMA<small>STORE · PANEL</small></span></a>
+    <p class="sidebar-label">TU NEGOCIO</p>
+    <a href="/panel/dashboard/"><span aria-hidden="true">▥</span> Métricas</a>
+    <a class="sidebar-active" href="/panel/dashboard/editor/" aria-current="page"><span aria-hidden="true">✎</span> Editar sitio <span class="nav-dot"></span></a>
+    <div class="sidebar-bottom"><a href="/" target="_blank" rel="noopener">Ver sitio público ↗</a><a href="/cdn-cgi/access/logout">Cerrar sesión →</a><p>Cartagena, Colombia<br>Acceso privado</p></div>
+  </aside>
+  <main class="dashboard-main editor-main">
+    <header class="dashboard-heading"><div><p class="eyebrow">ALTAGAMA STORE</p><h1>Personaliza tu sitio.</h1><p class="subtitle">Edita, revisa la vista previa y publica cuando esté listo.</p></div><a class="button button-small" href="/panel/dashboard/">← Volver a métricas</a></header>
+    <div id="editor-status" class="status-message" role="status" aria-live="polite">Cargando configuración…</div>
+    <div class="editor-toolbar"><div><strong id="save-state">Borrador</strong><span id="published-at">Sin cambios publicados desde el panel.</span></div><div><button id="save-draft" class="button" type="button" disabled>Guardar borrador</button><button id="publish" class="button button-gold" type="button" disabled>Publicar cambios</button></div></div>
+    <div class="editor-layout">
+      <div id="editor-fields" class="editor-fields" aria-label="Opciones de personalización"></div>
+      <aside class="preview-panel panel"><div class="preview-heading"><div><p class="eyebrow">VISTA PREVIA</p><h2>Así se verá el sitio</h2></div><div class="preview-switch"><button type="button" id="preview-mobile" class="active">Móvil</button><button type="button" id="preview-desktop">Escritorio</button></div></div><iframe id="site-preview" title="Vista previa del micrositio" src="/?medicion=off" loading="lazy"></iframe><p class="panel-note">La vista previa no cuenta visitas. Los cambios solo llegan al público al pulsar «Publicar cambios».</p></aside>
+    </div>
+  </main>
+</body>
+</html>

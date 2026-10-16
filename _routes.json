@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/api/events", "/panel/dashboard", "/panel/dashboard/*", "/panel/api/*"],
+  "include": ["/api/events", "/api/site", "/media/*", "/panel/dashboard", "/panel/dashboard/*", "/panel/api/*"],
   "exclude": []
 }
